@@ -16,4 +16,10 @@ if __name__ == '__main__':
     # drop all exept voice/unvoiced and ID
     df = df.drop(columns=[df.columns[-3],df.columns[-2], df.columns[-1]])
     df = df[df[df.columns[1]].notna()]
+
+    df = df.astype(int)
+    # remove if not 0 or 1
+    df = df[df[df.columns[-1]] < 2]
+    
+
     pass
