@@ -2,3 +2,4 @@
 *.wav
 temp/
 wav/
+*.json

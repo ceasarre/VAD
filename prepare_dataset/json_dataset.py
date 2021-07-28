@@ -14,11 +14,24 @@ DATA_PATH = "csv\Frame_descr.csv"
 PATH = join(DIR_PATH,  DATA_PATH)
 WAV_PATH_REL = "wav\long\data_long_mono.wav"
 WAV_PATH= join(DIR_PATH,  WAV_PATH_REL)
+JSON_FILE_PATH = join(DIR_PATH, "json\dataset.json")
 
 # Frame size in sec
 FRAME_SIZE = 0.2
 TARGET_FRAME_SIZE = 0.02
 SMALER_FRAMES = 10
+
+
+class NumpyEncoder(json.JSONEncoder):
+    """ Special json encoder for numpy types """
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
 
 if __name__ == '__main__':
 
@@ -61,4 +74,15 @@ if __name__ == '__main__':
 
             frame_id += 1
 
-    pass
+    # ! WHEN READING JSON FILE, TO USE IT, CONVERT TO NP ARRAY
+    # data['id'] = np.asarray(data['id'])
+    # data['samples'] = np.asarray(data['samples'])
+    # data['label'] = np.asarray(data['label'])
+    
+    # dump file 
+
+    dumped = json.dumps(data, cls=NumpyEncoder)
+
+    with open(JSON_FILE_PATH, 'w') as json_file:
+        json.dump(dumped, json_file)
+
