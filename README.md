@@ -9,7 +9,7 @@ Dir `analyze_wav` contains `take_frame_by_number.py` file which can be called wi
 Link to dataset saved in `.json` format is stored in `json\database_link.txt`.
 
 Dataset for each 20ms frame contains:
-  > unique id <br>
-  > raw samples <br>  
-  > melspectrogram <br> 
-  > mfcc
+  1. unique id <br>
+  2. raw samples <br>  
+  3. melspectrogram <br> 
+  4. mfcc
