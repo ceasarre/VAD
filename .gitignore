@@ -1,2 +1,4 @@
 .vscode
-.wav
+*.wav
+temp/
+wav/
