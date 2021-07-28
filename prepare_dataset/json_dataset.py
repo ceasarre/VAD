@@ -47,7 +47,7 @@ if __name__ == '__main__':
     }
 
     frame_id = 0
-    for index, row in df[:2].iterrows():
+    for index, row in df.iterrows():
     
         frame_large = record[row[0] * SAMPLES_PER_FRAME_INPUT : (row[0] + 1) * SAMPLES_PER_FRAME_INPUT]
         label = row[1]
