@@ -14,8 +14,8 @@ def load_data(file_path):
         data = json.load(f)
         data = json.loads(data)
 
-    X = np.asarray(data['mel'])
-    y = np.asarray(data['label'])
+    X = np.asarray(data[INDEPENDENT_VAR])
+    y = np.asarray(data[DEPENDED_VAR])
 
     return X, y
 
