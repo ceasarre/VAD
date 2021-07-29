@@ -31,19 +31,19 @@ def build_model(input_shape):
     model = tf.keras.Sequential()
 
     # 1 layer
-    model.add(tf.keras.layers.Conv2D(32,(3,3), activation='relu', input_shape = input_shape))
-    model.add(tf.keras.layers.MaxPooling2D((3,3), strides = (2,2), padding='same'))
+    model.add(tf.keras.layers.Conv2D(32,(2,2), activation='relu', input_shape = input_shape))
+    model.add(tf.keras.layers.MaxPooling2D((2,2), strides = (2,2), padding='same'))
     model.add(tf.keras.layers.BatchNormalization())
 
     # 2 layer
-    model.add(tf.keras.layers.Conv2D(32,(3,3), activation='relu'))
-    model.add(tf.keras.layers.MaxPooling2D((3,3), strides = (2,2), padding='same'))
+    model.add(tf.keras.layers.Conv2D(32,(2,2), activation='relu'))
+    model.add(tf.keras.layers.MaxPooling2D((2,2), strides = (2,2), padding='same'))
     model.add(tf.keras.layers.BatchNormalization())
 
-    # ! 3 layer not working
-    # model.add(tf.keras.layers.Conv2D(32,(2,2), activation='relu'))
-    # model.add(tf.keras.layers.MaxPooling2D((2,2), strides = (2,2), padding='same'))
-    # model.add(tf.keras.layers.BatchNormalization())
+    # 3 layer
+    model.add(tf.keras.layers.Conv2D(32,(2,2), activation='relu'))
+    model.add(tf.keras.layers.MaxPooling2D((2,2), strides = (2,2), padding='same'))
+    model.add(tf.keras.layers.BatchNormalization())
 
     # flatten output and feed it into dense layer
     model.add(tf.keras.layers.Flatten())
@@ -59,16 +59,14 @@ def predict(model, X, y):
 
     # add dimension, which is required
     
+    X = X[np.newaxis, ...]
     prediction = model.predict(X)
 
     # return index of the prediction
     predicted_index = np.argmax(prediction, axis=1)
 
-    return predicted_index
+    print("Target: {}, Predicted label: {}".format(predicted_index, predicted_index))
 
-def show_label(predicted_index, true_label):
-    
-    print("Target: {}, Predicted label: {}".format(true_label, predicted_index))
 
 
 def plot_history(history):
@@ -121,7 +119,9 @@ def main():
     model.summary()
 
     history = model.fit(X_train, y_train, validation_data=(X_val, y_val), batch_size=4, epochs=100)
-
+    test_loss, test_acc = model.evaluate(X_test, y_test, verbose=2)
+    print('\nTest accuracy:', test_acc)
+    predict(model, X_test[1], y_test[1])
     plot_history(history)
 
 
