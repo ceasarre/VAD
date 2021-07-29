@@ -45,6 +45,8 @@ def build_model(input_shape):
     model.add(tf.keras.layers.MaxPooling2D((2,2), strides = (2,2), padding='same'))
     model.add(tf.keras.layers.BatchNormalization())
 
+    # TODO: LSTM?????
+
     # flatten output and feed it into dense layer
     model.add(tf.keras.layers.Flatten())
     model.add(tf.keras.layers.Dense(64, activation = 'relu'))
