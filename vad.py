@@ -137,6 +137,9 @@ def main():
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.25, random_state=42)
 
+
+    # TODO: X_test dump to .json file to have the same data for CNN and WEBRTC. Reguired: unique index and mfcc (loaded data)
+
     # create network
     input_shape = (X_train.shape[1:])
     model = build_model(input_shape)
