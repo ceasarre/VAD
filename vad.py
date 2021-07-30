@@ -6,8 +6,15 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 import matplotlib.pyplot as plt
+import csv
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
 
-FILE_PATH = "json/dataset_6.json"
+plt.style.use('ggplot')
+plt.rcParams["figure.figsize"] = (18,10)
+
+
+FILE_PATH = "json/dataset.json"
 INDEPENDENT_VAR = 'mfcc'
 DEPENDED_VAR = 'label'
 
@@ -90,7 +97,29 @@ def plot_history(history):
     axs[1].legend(loc="upper right")
     axs[1].set_title("Error eval")
 
-    plt.show()
+    fig.savefig("results\plot\plot_1.png")
+
+def save_history(history):
+    with open('results\history\history.csv', 'w') as f:
+        for key in history.history.keys():
+            f.write("%s,%s\n"%(key, history.history[key]))
+
+def save_cm(model, X_test, y_test):
+
+    # Need to choose one value
+    y_pred = np.argmax(model.predict(X_test), axis=1)
+    conf_matrix = confusion_matrix(y_test, y_pred)
+
+    df_cm = pd.DataFrame(conf_matrix)
+    df_cm.to_csv('results\conf_matrix\conf_matrix.csv')
+
+    svm = sns.heatmap(conf_matrix, annot=True,cmap='coolwarm', linecolor='white', linewidths=1)
+    cm, ax1 = plt.subplots(1)
+    cm = svm.get_figure()    
+    cm.savefig('results\conf_matrix\conf_matrix.png', dpi=400)
+    
+
+    
 
 def main():
     X, y = load_data(FILE_PATH)
@@ -120,13 +149,19 @@ def main():
 
     model.summary()
 
-    history = model.fit(X_train, y_train, validation_data=(X_val, y_val), batch_size=4, epochs=100)
+    history = model.fit(X_train, y_train, validation_data=(X_val, y_val), batch_size=64, epochs=100)
     test_loss, test_acc = model.evaluate(X_test, y_test, verbose=2)
-    print('\nTest accuracy:', test_acc)
-    predict(model, X_test[1], y_test[1])
+    # print('\nTest accuracy:', test_acc)
+    # predict(model, X_test[1], y_test[1])
+
+    save_history(history)
+    save_cm(model, X_test, y_test)
+
     plot_history(history)
+    
+    model.save('results\model\model_1.h5')
 
-
+    
 
 if __name__ == '__main__':
     

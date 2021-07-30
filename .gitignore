@@ -5,5 +5,7 @@ wav/
 *.json
 *.png
 *.h5
-results\conf_matrix\*.txt
-results\history\*.csv
+results/conf_matrix/*.txt
+results/conf_matrix/*.csv
+
+results/history/*.csv
