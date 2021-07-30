@@ -6,3 +6,4 @@ wav/
 *.png
 *.h5
 results\conf_matrix\*.txt
+results\history\*.csv
