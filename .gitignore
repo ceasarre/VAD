@@ -3,3 +3,6 @@
 temp/
 wav/
 *.json
+*.png
+*.h5
+results\conf_matrix\*.txt
