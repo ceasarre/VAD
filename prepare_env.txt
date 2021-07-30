@@ -1,0 +1,10 @@
+Download anaconda navigator: https://www.anaconda.com/products/individual#windows
+Ściąga komend do anacondy: https://docs.conda.io/projects/conda/en/4.6.0/_downloads/52a95608c49671267e40c689e0bc00ca/conda-cheatsheet.pdf
+1. Tworzysz wirtualne środowisko: conda create --name tunazwaenv
+2. Aktywacja srodowiska: conda activate tunazwaenv
+3. Wgrywasz biblioteki:
+    a. conda install numpy
+    b. conda install -c conda-forge tensorflow
+    c. conda install -c anaconda seaborn
+    d. conda install -c conda-forge matplotlib
+    e. conda install scikit-learn / conda install -c conda-forge scikit-learn / conda install -c anaconda scikit-learn
