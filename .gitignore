@@ -7,5 +7,5 @@ wav/
 *.h5
 results/conf_matrix/*.txt
 results/conf_matrix/*.csv
-
 results/history/*.csv
+csv/*.csv

@@ -14,11 +14,11 @@ import matplotlib.pyplot as plt
 DIR_PATH = dirname(dirname(abspath(__file__)))
 sys.path.append(DIR_PATH)
 
-DATA_PATH = "csv\Frame_descr.csv"
+DATA_PATH = "csv\Frame_descr_50_50.csv"
 PATH = join(DIR_PATH,  DATA_PATH)
-WAV_PATH_REL = "wav\long\data_long_mono.wav"
+WAV_PATH_REL = "wav\long\data_long_mono_50_50.wav"
 WAV_PATH= join(DIR_PATH,  WAV_PATH_REL)
-JSON_FILE_PATH = join(DIR_PATH, "json\dataset.json")
+JSON_FILE_PATH = join(DIR_PATH, "json\dataset_50_50.json")
 
 # Frame size in sec
 FRAME_SIZE = 0.2
@@ -43,7 +43,9 @@ if __name__ == '__main__':
     df = pd.read_csv(PATH)
 
     # drop all exept voice/unvoiced and ID
-    df = df.drop(columns=[df.columns[-3],df.columns[-2], df.columns[-1]])
+    # df = df.drop(columns=[df.columns[-3],df.columns[-2], df.columns[-1]])
+    df.head()
+    df = df.iloc[:,:2]
     df = df[df[df.columns[1]].notna()]
 
     df = df.astype(int)

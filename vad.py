@@ -14,7 +14,7 @@ plt.style.use('ggplot')
 plt.rcParams["figure.figsize"] = (18,10)
 
 
-FILE_PATH = "json/dataset.json"
+FILE_PATH = "json/dataset_50_50.json"
 INDEPENDENT_VAR = 'mfcc'
 DEPENDED_VAR = 'label'
 
@@ -107,7 +107,7 @@ def save_history(history):
 def save_cm(model, X_test, y_test):
 
     # Need to choose one value
-    y_pred = np.argmax(model.predict(X_test), axis=1)
+    y_pred = np.argmax(model.predict(X_test), axis=1) #model.predict(X_test)
     conf_matrix = confusion_matrix(y_test, y_pred)
 
     df_cm = pd.DataFrame(conf_matrix)
@@ -122,6 +122,7 @@ def save_cm(model, X_test, y_test):
     
 
 def main():
+    print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
     X, y = load_data(FILE_PATH)
     scaler = StandardScaler()
     
