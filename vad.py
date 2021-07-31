@@ -107,7 +107,7 @@ def save_history(history):
 def save_cm(model, X_test, y_test):
 
     # Need to choose one value
-    y_pred = np.argmax(model.predict(X_test), axis=1) #model.predict(X_test)
+    y_pred = np.argmax(model.predict(X_test), axis=1) # model.predict(X_test)
     conf_matrix = confusion_matrix(y_test, y_pred)
 
     df_cm = pd.DataFrame(conf_matrix)
