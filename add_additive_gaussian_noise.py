@@ -28,7 +28,7 @@ random.seed(42)
 d = dirname(dirname(abspath(__file__)))
 sys.path.append(d)
 
-LONG_WAV_PATH = "wav\long\data_long_mono_50_50.wav"
+LONG_WAV_PATH = "data_long_mono_50_50.wav"
 OUTPUT_DIR = "wav\long"
 
 # Frame size in sec
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     INPUT_PATH = join(d,LONG_WAV_PATH)
     OUTPUT_PATH = join(d,OUTPUT_DIR)
 
-    SR, data = wavfile.read(INPUT_PATH)
+    SR, data = wavfile.read('data_long_mono_50_50.wav')
 
 # number of samples in a signal
 N_signal  = len(data)
@@ -88,4 +88,4 @@ snr_vec = [-5,0,5,10,15]
 # Save signals with varying levels of SNR
 for i, snr in enumerate(snr_vec):
     noisy_signal, acquired_snr = add_awgn(data, snr)
-    wavfile.write(join(OUTPUT_PATH,"long_awgn_SNR{}.wav".format(snr)),SR,noisy_signal.astype(np.int16))
+    wavfile.write("long_awgn_SNR{}.wav".format(snr),SR,noisy_signal.astype(np.int16))

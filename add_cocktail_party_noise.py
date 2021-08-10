@@ -66,6 +66,8 @@ def measure_power(input_signal):
 
 # calc linear scale to logarithmic
 def lin2db(power_lin):
+    if (power_lin == 0 ): 
+        power_lin = 1
     return 10*np.log10(power_lin)
 
 def measure_snr(signal_clean, signal_noise):
@@ -79,7 +81,6 @@ def rms_value(input_signal):
 def add_noise_with_snr(input_signal, noise_signal, snr):
     # Modify noise signal so that the clean signal power is SNR decibels greater than that of the gaussian noise
     noise_signal_norm = noise_signal/rms_value(noise_signal)*rms_value(input_signal)/np.sqrt(np.power(10,snr/10))
-    noise_signal_norm = noise_signal_norm.astype(np.int16)
     # Add noise signal to input signal
     noisy_signal = input_signal + noise_signal_norm
     
@@ -101,7 +102,7 @@ OUTPUT_DIR = "wav\long"
 
 INPUT_PATH = join(d,LONG_WAV_PATH)
 OUTPUT_PATH = join(d,OUTPUT_DIR)
-SR, data = read(INPUT_PATH)
+SR, data = read("short.wav")
 
 # Calculate number of frames = number of samples / (number of samples per frame)
 frames = int(len(data) / (FRAME_LENGTH * SR))
@@ -118,5 +119,5 @@ for i, snr in enumerate(snr_vec):
         data_frame = get_data_frame(id)
         contaminated_data, acquired_snr = add_noise_with_snr(data_frame, noise_frame, snr)
         full_data_array.extend(contaminated_data)
-    wavfile.write(join(OUTPUT_PATH, 'contaminated_signal_SNR{}.wav'.format(snr)),SR,np.array(full_data_array))
+    wavfile.write('contaminated_signal_SNR{}.wav'.format(snr),SR,np.array(full_data_array).astype(np.int16))
     full_data_array = []
