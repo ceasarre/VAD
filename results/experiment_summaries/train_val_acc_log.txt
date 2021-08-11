@@ -1,0 +1,5 @@
+Ratios of classes in the input dataset:
+	class "0": 0.5387881512563065 (107860 examples)
+	class "1": 0.4612118487436935 (92330 examples)
+
+Training accuracy of the model: 0.9832076194282099, validation accuracy: 0.9644088116289525

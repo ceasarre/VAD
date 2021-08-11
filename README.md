@@ -1,16 +1,16 @@
-# VAD
+# FEDCSIS VAD
 Repository contains voice activity detection algorithms and datasets
 
 `links.txt` contains all links related to project: excel with frame ids, recordings and other
-`vad_env.yml` is a image of the conda enviroment. User can install the whole enviroment by anaconda's prompt commend `conda env create -f vad_env.yml`
 
-Dir `analyze_wav` contains `take_frame_by_number.py` file which can be called with parser. To see the usage use the command `python take_frame_by_number.py -h`
+The script can be run by calling the `vad_experiment_driver.py` script. Outcomes of the script were used to prepare a FEDCSIS submission available at the URL below:
+https://www.overleaf.com/2827146645cccvpbhqxgwb
 
-Link to dataset saved in `.json` format is stored in `json\database_link.txt`.
+To train the CNN make the call below:
+*python vad_experiment_driver.py -es ann_training*
 
-Dataset for each 20ms frame contains :muscle: :
-  + unique id <br>
-  + raw samples <br>  
-  + melspectrogram <br> 
-  + mfcc
+To inspect structure of the input data and evaluate accuracies on the training and the validation datasets make the call below:
+*python vad_experiment_driver.py -es measure_train_val_acc*
 
+To perform the evaluation bein the main part of the FEDCSIS submission, use the following call:
+*python vad_experiment_driver.py -es model_evaluation*

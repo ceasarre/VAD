@@ -3,3 +3,6 @@
 temp/
 wav/
 *.json
+*.npz
+*.h5
+*.hdf
