@@ -14,7 +14,7 @@ plt.style.use('ggplot')
 plt.rcParams["figure.figsize"] = (18,10)
 
 
-FILE_PATH = "json/dataset_50_50.json"
+FILE_PATH = "json/dataset_speaker_5.json"   # do zmiany
 INDEPENDENT_VAR = 'mfcc'
 DEPENDED_VAR = 'label'
 
@@ -60,7 +60,7 @@ def build_model(input_shape):
     model.add(tf.keras.layers.Dropout(0.3))
 
     # output
-    model.add(tf.keras.layers.Dense(2, activation = 'softmax'))
+    model.add(tf.keras.layers.Dense(5, activation = 'softmax')) # zmiana wymiaru na n speakerów 
 
     return model
 
@@ -111,12 +111,12 @@ def save_cm(model, X_test, y_test):
     conf_matrix = confusion_matrix(y_test, y_pred)
 
     df_cm = pd.DataFrame(conf_matrix)
-    df_cm.to_csv('results\conf_matrix\conf_matrix.csv')
+    df_cm.to_csv('results\conf_matrix\conf_matrix_speaker.csv')
 
     svm = sns.heatmap(conf_matrix, annot=True,cmap='coolwarm', linecolor='white', linewidths=1)
     cm, ax1 = plt.subplots(1)
     cm = svm.get_figure()    
-    cm.savefig('results\conf_matrix\conf_matrix.png', dpi=400)
+    cm.savefig('results\conf_matrix\conf_matrix_speaker.png', dpi=400)
     
 
     
@@ -163,7 +163,7 @@ def main():
 
     plot_history(history)
     
-    model.save('results\model\model_1.h5')
+    model.save('results\model\model_speaker.h5')
 
     
 

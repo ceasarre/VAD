@@ -14,9 +14,9 @@ import matplotlib.pyplot as plt
 DIR_PATH = dirname(dirname(abspath(__file__)))
 sys.path.append(DIR_PATH)
 
-DATA_PATH = "csv\\train_data.csv"
+DATA_PATH = "csv\\5_speakers.csv"
 PATH = join(DIR_PATH,  DATA_PATH)
-JSON_FILE_PATH = join(DIR_PATH, "json\dataset_speaker.json")
+JSON_FILE_PATH = join(DIR_PATH, "json\dataset_speaker_5.json")
 
 # Frame size in sec
 FRAME_SIZE = 0.2
@@ -82,7 +82,7 @@ if __name__ == '__main__':
             file_frame_counter += 1
             frame_id += 1
             print("ID NR {}".format(frame_id))
-        # wyciagnieto wszystkie ramki z plikow, licznik zerowany
+        # wyciagnieto wszystkie ramki z pliku, licznik zerowany
         file_frame_counter = 0
 
     # ! WHEN READING JSON FILE, TO USE IT, CONVERT TO NP ARRAY
