@@ -64,6 +64,8 @@ settings['PROCESSING_PARAMS'].update({'samples_per_frame':int(settings['PROCESSI
 # A procedure which can be used to convert the JSON file to a 
 # much faster-reading file in a native, binary NumPy .npz format.
 def convert_json_to_npz():
+    """This is the function to convert from .json to npz format
+    """
     print('ładowanie danych z dysku')
     with open('dataset_50_50.json') as f:
         a = json.loads(json.load(f))
@@ -76,6 +78,21 @@ def convert_json_to_npz():
 #----------------------------------------------------------------
 
 def obtain_cocktail_party_noise_frame(frame_id, original_cocktail_noise_sgnl, frame_length, seed_increment=0):
+
+    """This is the function to obtain cocktail party noise to specific frame
+
+    Arguments:
+        frame id -- identifier of the frame
+        original_cocktail_noise_sgnl -- cocktail noise signal
+        frame_length
+        seed_increment
+
+    Returns:
+        frame_start : starting frame
+        frame_stop : ending frame
+        frame_length
+    """
+
     # Because we are manipulating the state of a random generator and 
     # we don't want  for our procedures to interfere with its operation,
     # we retrieve the current state of the RNG to restore it later.
@@ -96,23 +113,67 @@ def obtain_cocktail_party_noise_frame(frame_id, original_cocktail_noise_sgnl, fr
 
 # signal power measurement
 def measure_power(input_signal):
+    """Function to measure the power of signal in linear scale
+
+    Args:
+        input_signal (list): input signal
+
+    Returns:
+        float : mean power of the signal in linear scale
+    """
     return np.mean(np.power(input_signal,2))
 
 # conversion from linear to logarithmic scale
 def lin2db(power_lin):
+    """conversion from linear to logarithmic scale
+
+    Args:
+        power_lin (float): power in linear scale
+
+    Returns:
+        float: power in dB scale
+    """
     return 10*np.log10(power_lin)
 
 # Function for measuring SNR.
 def measure_snr(signal_clean, signal_noise):
+    """Function for measuring SNR.
+
+    Args:
+        signal_clean (array): clean signal
+        signal_noise (array): noise signal
+
+    Returns:
+        float: SNR in dB scale
+    """
     return lin2db(measure_power(signal_clean))-lin2db(measure_power(signal_noise))
 
 # rms measurement
 def rms_value(input_signal):
+    """Funtion to measure Root Mean Square Value
+
+    Args:
+        input_signal (array): input signal
+
+    Returns:
+        float: RMS value of the signal
+    """
     return np.sqrt(np.mean(np.power(input_signal,2)))
 
 # A function that adds an arbitrary noise signal  to achieve the
 # desired SNR.
 def add_noise_with_snr(input_signal, noise_signal, snr):
+    """A function that adds an arbitrary noise signal  to achieve the desired SNR.
+
+    Args:
+        input_signal (array): input signal
+        noise_signal (array): noise signal
+        snr (float): desired SNR
+
+    Returns:
+        array: signal with desired SNR
+        float: Acquired SNR
+    """
     # We modify the power of the noise so that the useful signal is 
     # by SNR decibels stronger than Gaussian noise.
     noise_signal_norm = noise_signal/rms_value(noise_signal)*rms_value(input_signal)/np.sqrt(np.power(10,snr/10))
@@ -127,6 +188,17 @@ def add_noise_with_snr(input_signal, noise_signal, snr):
     return noisy_signal, acquired_snr
 
 def add_awgn(input_signal, snr, frame_length):
+    """Function to add Additive White Gausian Noise
+
+    Args:
+        input_signal (array): input signa;
+        snr (float): Signal to Noise Ratio
+        frame_length (int): length of the frame
+
+    Returns:
+        array: signal with AWGN added
+        float: Acquired SNR
+    """
     # Generate Gaussian noise.
     awgn         = random.normal(size=frame_length)
     
@@ -140,10 +212,42 @@ def add_awgn(input_signal, snr, frame_length):
 #----------------------------------------------------------------
 
 def calc_acc(reference_labels, classification_result):
+    """Function to calculate the accuracy
+
+    Args:
+        reference_labels (int): true labels
+        classification_result (int): labels predicted by the model
+
+    Returns:
+        float: accuracy of the classification
+    """
     return 1-np.mean(np.logical_xor(reference_labels,classification_result))
 
 def perform_webrtc_vad_tests(main_dataset, snr_level, cocktail_noise_sgnl, settings):
+    """Function to perform WebRTC VAD test
+
+    Args:
+        main_dataset (data): Dataset
+        snr_level (float): SNR level
+        cocktail_noise_sgnl (array): Signal with cocktail noise party
+        settings : test settings
+    """
     def run_vads(main_dataset, snr, noise_type, cocktail_noise_sgnl, samples_per_frame):
+        """Function to run tests
+
+        Args:
+            main_dataset (data): dataset
+            snr (float): Signal to noise ratio
+            noise_type (string): type pf the noise. Two options: 'AWGN' or 'cocktail party'
+            cocktail_noise_sgnl (array): Signal with cocktail party noise
+            samples_per_frame (int): Samples per Rate
+
+        Raises:
+            RuntimeError: Raised when not proper options provided
+
+        Returns:
+            dict: results of WebRTC classification
+        """
         # Different aggressiveness settings for the VAD detector
         VADs_dict = {}
         for mode_value in settings['PROCESSING_PARAMS']['rtcvad_aggressiveness']: 
@@ -176,6 +280,18 @@ def perform_webrtc_vad_tests(main_dataset, snr_level, cocktail_noise_sgnl, setti
         return webrtc_classification_results
     
     def evaluate_results(webrtc_result, main_dataset, settings, noise_type, snr):
+        """Function to evaluate the result of the classification
+
+        Args:
+            webrtc_result (dict): results of webrtc alg
+            main_dataset (dict): dataset
+            settings (dict): settings
+            noise_type (string): type pf the noise. Two options: 'AWGN' or 'cocktail party'
+            snr (float): level of the SNR in dB
+
+        Returns:
+            list: summary
+        """
         summary_output   = []
         reference_labels = main_dataset['label'].astype(int)
         for aggr_val in settings['PROCESSING_PARAMS']['rtcvad_aggressiveness']:
@@ -221,6 +337,15 @@ def perform_webrtc_vad_tests(main_dataset, snr_level, cocktail_noise_sgnl, setti
 #----------------------------------------------------------------
 
 def load_data(file_path):
+    """Function to load data
+
+    Args:
+        file_path (string): path to dataset
+
+    Returns:
+        array: dependent variables
+        array: labels
+    """
     data = np.load(file_path)
     
     X = np.asarray(data['mfcc'])
@@ -232,6 +357,14 @@ def load_data(file_path):
     return X, y
 
 def build_model(input_shape):
+    """Function to build the model
+
+    Args:
+        input_shape (tuple): shape of the input data
+
+    Returns:
+        keras model: Deep Learning model
+    """
     
     model = tf.keras.Sequential()
 
@@ -263,6 +396,13 @@ def build_model(input_shape):
     return model
 
 def predict(model, X, y):
+    """Funtion to predict the result of the model
+
+    Args:
+        model (keras model): builded model
+        X (array): data to classify
+        y (array): true labels
+    """
 
     # add dimension, which is required
     
@@ -275,6 +415,12 @@ def predict(model, X, y):
     print("Target: {}, Predicted label: {}".format(predicted_index, predicted_index))
 
 def plot_history(history, settings):
+    """Function to plot thehistory of the training
+
+    Args:
+        history (dict): history of the training
+        settings (dict): Path to save the plot etc.
+    """
     
     fig, axs = plt.subplots(2)
 
@@ -296,11 +442,25 @@ def plot_history(history, settings):
     fig.savefig(settings['PATHS']['trn_history_plot'])
 
 def save_history(history, settings):
+    """Function to save the history as a file
+
+    Args:
+        history (dict): history of the training
+        settings (dict): Path to save etc.
+    """
     with open(settings['PATHS']['trn_history_data'], 'w') as f:
         for key in history.history.keys():
             f.write("%s,%s\n"%(key, history.history[key]))
 
 def save_cm(model, X_test, y_test, settings):
+    """Function to save the confusion matrix as a file
+
+    Args:
+        model (keras model): model
+        X_test (array): test independed varaiables
+        y_test (array): true labels of the test dataset
+        settings (dict): Path to save etc.
+    """
 
     # Need to choose one value
     y_pred = np.argmax(model.predict(X_test), axis=1) # model.predict(X_test)
@@ -315,6 +475,11 @@ def save_cm(model, X_test, y_test, settings):
     cm.savefig(settings['PATHS']['conf_mtx_plot'], dpi=400)
 
 def ann_training(settings):
+    """Function to train basic ann model
+
+    Args:
+        settings (dict): input dataset path etc.
+    """
 
     FILE_PATH = settings['PATHS']['input_dataset']
     
@@ -358,8 +523,28 @@ def ann_training(settings):
     model.save(settings['PATHS']['ann_model_dir'])
 
 def perform_cnnvad_vad_tests(main_dataset, cnnvad_model, snr_level, cocktail_noise_sgnl, settings):
+    """Function to perform CNN model
+
+    Args:
+        main_dataset (dict): dataset
+        cnnvad_model (keras model): Deep Learning model
+        snr_level (float): SNR level in dB
+        cocktail_noise_sgnl (array): cocktail party noise
+        settings (dict): path to save data etc.
+    """
     
     def evaluate_results(predicted_indices, reference_labels, noise_type, snr):
+        """Function to evaluate the results
+
+        Args:
+            predicted_indices (array): prediction labels
+            reference_labels (array): true labels
+            noise_type (string): type of the noise
+            snr (float): SNR in dB
+
+        Returns:
+            dict: results of the test
+        """
         acc                   = calc_acc(reference_labels, predicted_indices)
         print(f'accuracy for CNN-based VAD is {acc}')
         
@@ -374,6 +559,22 @@ def perform_cnnvad_vad_tests(main_dataset, cnnvad_model, snr_level, cocktail_noi
         return summary_row
     
     def run_vads(main_dataset, cnnvad_model, snr, noise_type, cocktail_noise_sgnl, samples_per_frame):
+        """Function to evaluate VADs algorithms
+
+        Args:
+            main_dataset (dict): dataset
+            cnnvad_model (keras model): Convolutional Deep Learning model
+            snr (float): Signal to noise ratio
+            noise_type (string): type of noise
+            cocktail_noise_sgnl (array): cocktail noise signal
+            samples_per_frame (int): Samples per rate ratio
+
+        Raises:
+            RuntimeError: When data is incorrect
+
+        Returns:
+            list: summary output
+        """
         SR = settings['PROCESSING_PARAMS']['sampling_rate']
         
         # fetching the original parameterized dataset
@@ -453,6 +654,16 @@ def perform_cnnvad_vad_tests(main_dataset, cnnvad_model, snr_level, cocktail_noi
     return summary_output
 
 def measure_train_val_acc(settings, cnnvad_model):
+    """Function to measure accuracy of the training set and validation set
+
+    Args:
+        settings (dict): path to save the results etc.
+        cnnvad_model (keras model): model of the CNN 
+
+    Returns:
+        float: accuracy of the training set
+        float: accuracy of the validation set
+    """
     
     SR = settings['PROCESSING_PARAMS']['sampling_rate']
     
