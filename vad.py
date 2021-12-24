@@ -126,6 +126,17 @@ def main():
     X, y = load_data(FILE_PATH)
     scaler = StandardScaler()
     
+    # convert string label to label index
+    y_num = []
+    speaker_ID_num = 0
+    match = y[0]
+    for label in y: 
+        if (label != match):
+            speaker_ID_num = speaker_ID_num+1
+            match = label
+        y_num.append(speaker_ID_num)
+    y_num = np.asarray(y_num,np.float64) # float64 type for consistency with X
+    #y_num = y_num.astype(np.float64)
 
     # data scaling
     #! Should the every observation be scaled or every line of the scpectrogram?
@@ -135,7 +146,7 @@ def main():
     #* Dataset is to big to use the KFold Cross validation on the PC
     # Spliting for train, test and validation dataset
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y_num, test_size=0.2, random_state=42)
     X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.25, random_state=42)
 
 
