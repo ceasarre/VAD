@@ -14,3 +14,6 @@ To inspect structure of the input data and evaluate accuracies on the training a
 
 To perform the evaluation bein the main part of the FEDCSIS submission, use the following call:<br/>
 *python vad_experiment_driver.py -es model_evaluation*
+
+# Publications
+Results of the experiments were published during the FEDCSIS conference. The article is available [here](https://annals-csis.org/proceedings/2021/drp/146.html)
